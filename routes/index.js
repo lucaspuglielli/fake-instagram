@@ -1,17 +1,23 @@
 const express = require("express");
 const router = express.Router();
 
-router.get("/", function (req, res, next) {
-  res.render("auth/login", { title: "Express" });
-});
+const userController = require("../controllers/userController");
+const authController = require("../controllers/authController");
+const postController = require("../controllers/postController");
+const auth = require("../middlewares/auth");
+const upload = require("../configs/uploads");
+/* GET home page. */
 
-router.get("/login", function (req, res, next) {
-  res.render("auth/login", { title: "Express" });
-});
+router.get("/", authController.create);
 
-router.get("/registro", function (req, res, next) {
-  res.render("auth/register", { title: "Express" });
-});
+router.get("/login", authController.create);
+router.post("/login", authController.store);
+
+router.get("/registro", userController.create);
+router.post("/registro", userController.store);
+
+router.get("/publicar", auth, postController.create);
+router.post("/publicar", upload.any(), postController.store);
 
 router.get("/home", function (req, res, next) {
   res.render("index", { title: "Express" });
